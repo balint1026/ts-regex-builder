@@ -1,8 +1,8 @@
-# easy-regex
+# easy-regex-ts
 
 **Fluent, type-safe regex builder for TypeScript**
 
-`easy-regex` is a zero-dependency, fully type-safe regex builder.
+`easy-regex-ts` is a zero-dependency, fully type-safe regex builder.
 It provides a **fluent API** for building complex regular expressions with full **TypeScript inference**, runtime safety, and modern regex features like lookaheads, alternation, and quantifiers.
 
 ---
@@ -20,7 +20,7 @@ It provides a **fluent API** for building complex regular expressions with full 
 ## Installation
 
 ```bash
-npm install easy-regex
+npm install easy-regex-ts
 ```
 
 ---
