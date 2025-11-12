@@ -1,17 +1,20 @@
 {
   "name": "easy-regex",
- "version": "0.1.0",
+  "version": "0.1.0",
+  "description": "Fluent, type-safe regex builder for TypeScript",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "files": ["dist"],
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts",
-    "dev": "tsup src/index.ts --format esm --watch --dts"
+    "build": "tsc",
+    "demo": "tsx src/demo.ts",
+    "prepublishOnly": "npm run build"
   },
+  "keywords": ["regex", "typescript", "fluent", "type-safe"],
+  "author": "balint0026",
+  "license": "MIT",
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "tsup": "^8.0.0",
-    "@types/node": "^20.0.0"
-  },
-  "files": ["dist"]
+    "typescript": "^5.5.0",
+    "tsx": "^4.0.0"
+  }
 }
