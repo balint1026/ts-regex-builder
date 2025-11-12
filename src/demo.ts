@@ -1,4 +1,4 @@
-import { regex } from './index';
+import { regex } from './index.js';
 
 const testPattern = (
   name: string,

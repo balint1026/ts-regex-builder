@@ -7,11 +7,11 @@
   "files": ["dist"],
   "scripts": {
     "build": "tsc",
-    "demo": "tsx src/demo.ts",
+    "demo": "npm run build && node dist/demo.js",
     "prepublishOnly": "npm run build"
   },
   "keywords": ["regex", "typescript", "fluent", "type-safe"],
-  "author": "balint0026",
+  "author": "balin",
   "license": "MIT",
   "devDependencies": {
     "typescript": "^5.5.0",
