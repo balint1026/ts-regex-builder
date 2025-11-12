@@ -47,7 +47,7 @@ npm install easy-regex
 | `.repeat(n)`          | `regex().digit().repeat(3)`                        | `\d{3}`       |       |
 | `.between(min,max)`   | `regex().anyOf('_').between(3,15)`                 | `[_]{3,15}`   |       |
 | `.atLeast(n)`         | `regex().any().atLeast(8)`                         | `.{8,}`       |       |
-| `.or(r => ...)`       | `regex().literal('cat').or(r => r.literal('dog'))` | `(cat         | dog)` |
+| `.or(r => ...)`       | `regex().literal('cat').or(r => r.literal('dog'))` | `(cat|dog)`   |       |
 | `.group(r => ...)`    | `regex().group(r => r.digit().literal('-'))`       | `(\d-)`       |       |
 | `.lookahead(str)`     | `regex().lookahead('(?=.*[A-Z])')`                 | `(?=.*[A-Z])` |       |
 
