@@ -1,6 +1,6 @@
 {
   "name": "easy-regex-ts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Fluent, type-safe regex builder for TypeScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,7 +15,13 @@
     "demo": "npm run build && node dist/demo.js",
     "prepublishOnly": "npm run build"
   },
-  "keywords": ["regex", "typescript", "fluent", "type-safe", "builder"],
+  "keywords": [
+    "regex",
+    "typescript",
+    "fluent",
+    "type-safe",
+    "builder"
+  ],
   "author": "Bálint Juhász",
   "license": "MIT",
   "repository": {
