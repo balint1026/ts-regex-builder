@@ -29,27 +29,30 @@ npm install easy-regex
 
 ### Building Blocks
 
-| Method                | Example                                            | Output        |       |
-| --------------------- | -------------------------------------------------- | ------------- | ----- |
-| `.start()` / `.end()` | `regex().start().digit().end()`                    | `^\d$`        |       |
-| `.digit()`            | `regex().digit().digit()`                          | `\d\d`        |       |
-| `.word()`             | `regex().word().word()`                            | `\w+`         |       |
-| `.any()`              | `regex().any().any()`                              | `..`          |       |
-| `.letter()`           | `regex().letter().letter()`                        | `[a-zA-Z]`    |       |
-| `.space()` / `.tab()` | `regex().space().tab()`                            | `\t`          |       |
-| `.wordBoundary()`     | `regex().wordBoundary()`                           | `\b`          |       |
-| `.literal(str)`       | `regex().literal('https://')`                      | `https:\/\/`  |       |
-| `.anyOf(chars)`       | `regex().anyOf('a-f0-9')`                          | `[a-f0-9]`    |       |
-| `.noneOf(chars)`      | `regex().noneOf(' <>')`                            | `[^ <>]`      |       |
-| `.maybe()`            | `regex().digit().maybe()`                          | `\d?`         |       |
-| `.oneOrMore()`        | `regex().digit().oneOrMore()`                      | `\d+`         |       |
-| `.zeroOrMore()`       | `regex().space().zeroOrMore()`                     | ` *`          |       |
-| `.repeat(n)`          | `regex().digit().repeat(3)`                        | `\d{3}`       |       |
-| `.between(min,max)`   | `regex().anyOf('_').between(3,15)`                 | `[_]{3,15}`   |       |
-| `.atLeast(n)`         | `regex().any().atLeast(8)`                         | `.{8,}`       |       |
-| `.or(r => ...)`       | `regex().literal('cat').or(r => r.literal('dog'))` | `(cat|dog)`   |       |
-| `.group(r => ...)`    | `regex().group(r => r.digit().literal('-'))`       | `(\d-)`       |       |
-| `.lookahead(str)`     | `regex().lookahead('(?=.*[A-Z])')`                 | `(?=.*[A-Z])` |       |
+### Building Blocks
+
+| Method | Example | Output |
+|--------|--------|--------|
+| `.start()` / `.end()` | `regex().start().digit().end()` | `^\d$` |
+| `.digit()` | `regex().digit().repeat(2)` | `\d{2}` |
+| `.word()` | `regex().word()` | `\w+` |
+| `.any()` | `regex().any().repeat(3)` | `.{3}` |
+| `.letter()` | `regex().letter()` | `[a-zA-Z]` |
+| `.space()` | `regex().space().zeroOrMore()` | ` *` |
+| `.tab()` | `regex().tab()` | `\t` |
+| `.wordBoundary()` | `regex().wordBoundary()` | `\b` |
+| `.literal(str)` | `regex().literal('https://')` | `https:\/\/` |
+| `.anyOf(chars)` | `regex().anyOf('a-f0-9')` | `[a-f0-9]` |
+| `.noneOf(chars)` | `regex().noneOf(' <>')` | `[^ <>]` |
+| `.maybe()` | `regex().digit().maybe()` | `\d?` |
+| `.oneOrMore()` | `regex().digit().oneOrMore()` | `\d+` |
+| `.zeroOrMore()` | `regex().space().zeroOrMore()` | ` *` |
+| `.repeat(n)` | `regex().digit().repeat(3)` | `\d{3}` |
+| `.between(min,max)` | `regex().anyOf('_').between(3,15)` | `[_]{3,15}` |
+| `.atLeast(n)` | `regex().any().atLeast(8)` | `.{8,}` |
+| `.or(r => ...)` | `regex().literal('cat').or(r => r.literal('dog'))` | `(cat\|dog)` |
+| `.group(r => ...)` | `regex().group(r => r.digit().literal('-'))` | `(\d-)` |
+| `.lookahead(str)` | `regex().lookahead('(?=.*[A-Z])')` | `(?=.*[A-Z])` |
 
 ### Terminal Methods
 

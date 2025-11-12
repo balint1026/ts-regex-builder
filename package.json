@@ -1,5 +1,5 @@
 {
-  "name": "easy-regex",
+  "name": "easy-regex-ts",
   "version": "0.1.0",
   "description": "Fluent, type-safe regex builder for TypeScript",
   "main": "dist/index.js",
@@ -11,9 +11,17 @@
     "demo": "npm run build && node dist/demo.js",
     "prepublishOnly": "npm run build"
   },
-  "keywords": ["regex", "typescript", "fluent", "type-safe"],
-  "author": "balint1026",
+  "keywords": ["regex", "typescript", "fluent", "type-safe", "builder"],
+  "author": "Bálint Juhász",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/balint1026/easy-regex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/balint1026/easy-regex/issues"
+  },
+  "homepage": "https://github.com/balint1026/easy-regex#readme",
   "devDependencies": {
     "typescript": "^5.5.0",
     "tsx": "^4.0.0"
