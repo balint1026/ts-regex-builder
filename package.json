@@ -4,8 +4,12 @@
   "description": "Fluent, type-safe regex builder for TypeScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/index.js.map",
+    "dist/index.d.ts.map"
+  ],
   "scripts": {
     "build": "tsc",
     "demo": "npm run build && node dist/demo.js",
