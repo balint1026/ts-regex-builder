@@ -196,21 +196,6 @@ testPattern(
   ['# Title', '### Subsection'],
   ['Title', '##']
 );
-
-/* testPattern(
-  'Color Names (Alternation)',
-  regex()
-    .start()
-    .group(r =>
-      r()
-        .literal('red')
-        .or(rr => rr().literal('green'))
-        .or(rr => rr().literal('blue'))
-    )
-    .end(),
-  ['red', 'green', 'blue'],
-  ['yellow', 'orange']
-);  */
 /* ------------------------------------------------------------------ */
 /* 🧠 7. Type Inference Showcase                                      */
 /* ------------------------------------------------------------------ */
