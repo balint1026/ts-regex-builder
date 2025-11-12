@@ -11,7 +11,7 @@
     "prepublishOnly": "npm run build"
   },
   "keywords": ["regex", "typescript", "fluent", "type-safe"],
-  "author": "balin",
+  "author": "balint1026",
   "license": "MIT",
   "devDependencies": {
     "typescript": "^5.5.0",
