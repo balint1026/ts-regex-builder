@@ -1,15 +1,20 @@
 export type Pattern = string;
 
+/* ------------------------------------------------------------------ */
 /*                         Helper utilities                           */
+/* ------------------------------------------------------------------ */
 const escape = (s: string) =>
   s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+/* ------------------------------------------------------------------ */
 /*                        Builder implementation                      */
+/* ------------------------------------------------------------------ */
 export const regex = <P extends Pattern = ''>(
   parts: string[] = []
 ): RegexBuilder<P> => {
   return new Proxy({} as any, {
     get: (_, prop: string) => {
+      // Terminal helpers
       if (prop === 'toRegExp')
         return (flags = '') => new RegExp(parts.join(''), flags);
       if (prop === 'toString') return () => parts.join('');
@@ -17,9 +22,11 @@ export const regex = <P extends Pattern = ''>(
         return (s: string, f = '') => new RegExp(parts.join(''), f).test(s);
       if (prop === 'pattern') return parts.join('') as P;
 
+      // Method chaining
       return (...args: any[]) => {
         const newParts: string[] = [...parts];
 
+        /* ---------- QUANTIFIERS: MODIFY LAST PART ---------- */
         if (['maybe', 'oneOrMore', 'zeroOrMore'].includes(prop)) {
           if (newParts.length === 0) {
             throw new Error(`${prop}() must follow a pattern part`);
@@ -46,15 +53,17 @@ export const regex = <P extends Pattern = ''>(
           return regex(newParts as any);
         }
 
+        /* ---------- REPEAT / BETWEEN / ATLEAST: MODIFY LAST PART ---------- */
         if (['repeat', 'between', 'atLeast'].includes(prop)) {
           if (newParts.length === 0) {
             throw new Error(`${prop}() must follow a pattern part`);
           }
-          const last = newParts[newParts.length - 1];
 
+          const last = newParts[newParts.length - 1];
           if (last === '\\w+') {
             throw new Error(`Cannot apply ${prop}() after .word() — it already includes +`);
           }
+
           const min = args[0];
           const max = args[1];
           if (!Number.isInteger(min) || min < 0) {
@@ -75,6 +84,7 @@ export const regex = <P extends Pattern = ''>(
           return regex(newParts as any);
         }
 
+        /* ---------- LOOKAHEAD: STRING OR FUNCTION ---------- */
         if (prop === 'lookahead') {
           let pattern: string;
           if (typeof args[0] === 'string') {
@@ -88,6 +98,7 @@ export const regex = <P extends Pattern = ''>(
           return regex(newParts as any);
         }
 
+        /* ---------- OR / GROUP: FUNCTION ONLY ---------- */
         if (prop === 'or' || prop === 'group') {
           const fn = args[0];
           if (typeof fn !== 'function') {
@@ -99,43 +110,25 @@ export const regex = <P extends Pattern = ''>(
           return regex(newParts as any);
         }
 
+        /* ---------- ALL OTHER METHODS: APPEND NEW PART ---------- */
         let addition = '';
 
         switch (prop) {
-          case 'start':
-            addition = '^';
-            break;
-          case 'end':
-            addition = '$';
-            break;
-          case 'digit':
-            addition = '\\d';
-            break;
-          case 'word':
-            addition = '\\w+';
-            break;
-          case 'any':
-            addition = '.';
-            break;
-          case 'letter':
-            addition = '[a-zA-Z]';
-            break;
-          case 'space':
-            addition = ' ';
-            break;
-          case 'tab':
-            addition = '\\t';
-            break;
-          case 'wordBoundary':
-            addition = '\\b';
-            break;
+          case 'start': addition = '^'; break;
+          case 'end': addition = '$'; break;
+          case 'digit': addition = '\\d'; break;
+          case 'word': addition = '\\w+'; break;
+          case 'any': addition = '.'; break;
+          case 'letter': addition = '[a-zA-Z]'; break;
+          case 'space': addition = ' '; break;
+          case 'tab': addition = '\\t'; break;
+          case 'wordBoundary': addition = '\\b'; break;
 
           case 'digits': {
             const min = args[0];
             const max = args[1];
             if (!Number.isInteger(min) || min < 0)
               throw new Error('digits() min must be a non-negative integer');
-
             let quant = `{${min}}`;
             if (max !== undefined) {
               if (!Number.isInteger(max) || max < min)
@@ -151,7 +144,6 @@ export const regex = <P extends Pattern = ''>(
             const max = args[1];
             if (!Number.isInteger(min) || min < 0)
               throw new Error('letters() min must be a non-negative integer');
-
             let quant = `{${min}}`;
             if (max !== undefined) {
               if (!Number.isInteger(max) || max < min)
@@ -191,14 +183,16 @@ export const regex = <P extends Pattern = ''>(
   }) as any;
 };
 
+/* ------------------------------------------------------------------ */
 /*                              Public API types                      */
+/* ------------------------------------------------------------------ */
 export interface RegexBuilder<P extends Pattern = ''> {
   start: () => RegexBuilder<`${P}^`>;
   end: () => RegexBuilder<`${P}$`>;
   digit: () => RegexBuilder<`${P}\\d`>;
   digits: {
-    (n: number): RegexBuilder<`${P}\\d{${number}}`>;
-    (min: number, max: number): RegexBuilder<`${P}\\d{${number},${number}}`>;
+    <N extends number>(n: N): RegexBuilder<`${P}\\d{${N}}`>;
+    <M extends number, X extends number>(min: M, max: X): RegexBuilder<`${P}\\d{${M},${X}}`>;
   };
   word: () => RegexBuilder<`${P}\\w+`>;
   any: () => RegexBuilder<`${P}.`>;
@@ -206,8 +200,8 @@ export interface RegexBuilder<P extends Pattern = ''> {
 
   letter: () => RegexBuilder<`${P}[a-zA-Z]`>;
   letters: {
-    (n: number): RegexBuilder<`${P}[a-zA-Z]{${number}}`>;
-    (min: number, max: number): RegexBuilder<`${P}[a-zA-Z]{${number},${number}}`>;
+    <N extends number>(n: N): RegexBuilder<`${P}[a-zA-Z]{${N}}`>;
+    <M extends number, X extends number>(min: M, max: X): RegexBuilder<`${P}[a-zA-Z]{${M},${X}}`>;
   };
 
   anyOf: <S extends string>(chars: S) => RegexBuilder<`${P}[${Escape<S>}]`>;
@@ -221,9 +215,9 @@ export interface RegexBuilder<P extends Pattern = ''> {
   oneOrMore: () => RegexBuilder<`${P}+`>;
   zeroOrMore: () => RegexBuilder<`${P}*`>;
 
-  repeat: (n: number) => RegexBuilder<`${P}{${number}}`>;
-  between: (min: number, max: number) => RegexBuilder<`${P}{${number},${number}}`>;
-  atLeast: (n: number) => RegexBuilder<`${P}{${number},}`>;
+  repeat: <N extends number>(n: N) => RegexBuilder<`${P}{${N}}`>;
+  between: <M extends number, X extends number>(min: M, max: X) => RegexBuilder<`${P}{${M},${X}}`>;
+  atLeast: <N extends number>(n: N) => RegexBuilder<`${P}{${N},}`>;
 
   or: <Q extends Pattern>(
     builder: (r: RegexBuilder<''>) => RegexBuilder<Q>
@@ -234,7 +228,7 @@ export interface RegexBuilder<P extends Pattern = ''> {
   ) => RegexBuilder<`${P}(${Q})`>;
 
   lookahead: {
-    (pattern: string): RegexBuilder<`${P}${string}`>;
+    <L extends string>(pattern: L): RegexBuilder<`${P}${L}`>;
     <Q extends Pattern>(builder: (r: RegexBuilder<''>) => RegexBuilder<Q>): RegexBuilder<`${P}${Q}`>;
   };
 
@@ -244,9 +238,11 @@ export interface RegexBuilder<P extends Pattern = ''> {
   pattern: P;
 }
 
+/* ------------------------------------------------------------------ */
 /*                     Type-level escape for literals                 */
+/* ------------------------------------------------------------------ */
 type Escape<S extends string> = S extends `${infer C}${infer Rest}`
   ? C extends '.' | '+' | '*' | '?' | '^' | '$' | '(' | ')' | '{' | '}' | '[' | ']' | '|' | '\\'
-  ? `\\${C}${Escape<Rest>}`
-  : `${C}${Escape<Rest>}`
+    ? `\\${C}${Escape<Rest>}`
+    : `${C}${Escape<Rest>}`
   : S;
